@@ -1,0 +1,313 @@
+body
+{
+    margin: 0;
+}
+
+#title_bar
+{
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 10px;
+    height: 100px;
+    line-height: 50px;
+    border-radius: 5px;
+    background-image: linear-gradient(#4879ff, #1519ff);
+}
+
+#outer_nav
+{
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 10px;
+    height: 70px;
+    line-height: 50px;
+    border: 2px solid #3f96ff;
+    border-radius: 5px;
+    background-image: linear-gradient(#3f96ff, #2e66b8);
+}
+
+#inner_nav
+{
+    margin: 10px;
+    height: 50px;
+    line-height: 50px;
+    border: 2px solid #eafff6;
+    border-radius: 5px;
+    background-image: linear-gradient(#eafff6, #ffffff);
+
+}
+
+#nav_list
+{
+    margin: 0 0 0 0;
+    padding: 0;
+    list-style: none;
+
+}
+
+.nav_left
+{
+    float: left;
+}
+
+.nav_right
+{
+    float:right;
+}
+
+#nav_list li a
+{
+    display: block;
+    padding: 0px 15px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #4454ff;
+    border-radius: 5px;
+}
+
+#nav_list li a:hover
+{
+    color: #001eff;
+    background-image: linear-gradient(#b7ccc3, #91a39a);
+}
+
+#nav_list li form
+{
+    float:right;
+    display: block;
+    padding: 0px 15px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #069;
+}
+
+.prof_login_box
+{
+    float:left;
+    margin-top: 10px;
+    margin-left: 10px;
+    border: 4px inset #c0c0c0;
+    border-radius: 5px;
+    padding: 2px;
+    outline:0;
+}
+
+#prof_login_button
+{
+    float: left;
+    margin-top: 10px;
+    margin-left: 20px;
+    padding:5px 15px; background: #9bafb0; border:0 none;
+    cursor:pointer;
+    border-radius: 5px;
+}
+
+.prof_login_box:focus
+{
+    border-color: #000000;
+}
+
+#prof_register
+{
+    float: left;
+    margin-left: 10px;
+}
+
+#prof_img
+{
+    margin: 5px;
+    border: 2px solid #000000;
+    border-radius: 5px;
+}
+
+#prof_left
+{
+    float: left;
+    height: 100%;
+    width: 40%;
+}
+
+#prof_right
+{
+    float: left;
+    height: 100%;
+    width: 60%;
+}
+
+#outer_popular
+{
+    margin-left: 50px;
+    margin-top: 10px;
+    float: left;
+    height: 300px;
+    width: 65%;
+    right: 425px;
+    line-height: 50px;
+    border: 2px solid #3f96ff;
+    border-radius: 5px;
+    background-image: linear-gradient(#3f96ff, #2e66b8);
+}
+
+#inner_popular
+{
+    margin: 10px;
+    height: 280px;
+    line-height: 50px;
+    border: 2px solid #eafff6;
+    border-radius: 5px;
+    background-image: linear-gradient(#eafff6, #ffffff);
+}
+
+#outer_news
+{
+    margin-left: 50px;
+    margin-top: 10px;
+    float: left;
+    height: 300px;
+    width: 65%;
+    right: 425px;
+    line-height: 50px;
+    border: 2px solid #3f96ff;
+    border-radius: 5px;
+    background-image: linear-gradient(#3f96ff, #2e66b8);
+}
+
+#inner_news
+{
+    margin: 10px;
+    height: 280px;
+    line-height: 50px;
+    border: 2px solid #eafff6;
+    border-radius: 5px;
+    background-image: linear-gradient(#eafff6, #ffffff);
+}
+
+#outer_profile
+{
+    float: left;
+    height: 150px;
+    margin:10px;
+    width: 25%;
+    right: 425px;
+    line-height: 50px;
+    border: 2px solid #3f96ff;
+    border-radius: 5px;
+    background-image: linear-gradient(#3f96ff, #2e66b8);
+}
+
+#inner_profile
+{
+    margin: 10px;
+    height: 130px;
+    line-height: 50px;
+    border: 2px solid #eafff6;
+    border-radius: 5px;
+    background-image: linear-gradient(#eafff6, #ffffff);
+}
+
+#left
+{
+    float: left;
+    width: 20%;
+    height: 2000px;
+    background: url("../img/Border.png") repeat-x;
+}
+
+#middle
+{
+    float: left;
+    width: 60%;
+    height: 2000px;
+    background-color: #ffffff;
+}
+
+#right
+{
+    float: left;
+    width: 20%;
+    height: 2000px;
+    background: url("../img/Border.png") repeat-x;
+}
+
+#footer
+{
+    clear: both;
+    width: 100%;
+    height: 100px;
+    height: 25px;
+    background-color: #c9d3dc;
+}
+
+/* Register.php*/
+
+#register_form
+{
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 10px;
+}
+
+#register_left
+{
+    float: left;
+    width: 50%;
+    height: 100%;
+}
+
+#register_right
+{
+    float: left;
+    width: 50%;
+    height: 100%;
+}
+
+#register_labels
+{
+    float: right;
+    text-align: right;
+    margin-right: 5px;
+}
+
+#register_input
+{
+    float: left;
+    margin-left: 5px;
+}
+
+#register_box
+{
+    display: block;
+    clear: both;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#register_label
+{
+    display: block;
+    clear: both;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#register_error
+{
+    background-color: #ffb3b3;
+    border: 2px solid #ff0700;
+    border-radius: 5px;
+}
+
+#error_title
+{
+    margin: 0;
+    font-weight: bold;
+}
+
+#game_window
+{
+    background-color: darkgray;
+    width: 192px;
+    height: 384px;
+    margin: 50px auto 0;
+    border: 2px solid #6e6e7b;
+}
