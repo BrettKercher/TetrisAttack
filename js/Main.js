@@ -3,13 +3,19 @@
  */
 
 //Key Codes
-const LEFT = 37; //ARROW LEFT
-const UP = 38; //ARROW UP
-const RIGHT = 39; //ARROW RIGHT
-const DOWN = 40; //ARROW DOWN
-const SELECT = 90; //Z
-const COMPARE = 112; //f1
-const SCROLL = 88; //X
+const PLAYER_ONE_LEFT = 65; //A
+const PLAYER_ONE_UP = 87; //W
+const PLAYER_ONE_RIGHT = 68; //D
+const PLAYER_ONE_DOWN = 83; //S
+const PLAYER_ONE_SELECT = 70; //F
+const PLAYER_ONE_SCROLL = 88; //E
+
+const PLAYER_TWO_LEFT = 74; //J
+const PLAYER_TWO_UP = 73; //I
+const PLAYER_TWO_RIGHT = 76; //L
+const PLAYER_TWO_DOWN = 75; //K
+const PLAYER_TWO_SELECT = 72; //H
+const PLAYER_TWO_SCROLL = 85; //U
 
 var loader;
 
@@ -18,10 +24,13 @@ var loader;
  */
 require(["./Game", "./ImageLoader"], function(Game, ImageLoader)
 {
-    var canvas = document.getElementById("game_canvas");
-    var ctx = canvas.getContext("2d");
+    var canvas_1 = document.getElementById("player_1_canvas");
+    var ctx_1 = canvas_1.getContext("2d");
 
-    var game = new Game(ctx, canvas);
+    var canvas_2 = document.getElementById("player_2_canvas");
+    var ctx_2 = canvas_2.getContext("2d");
+
+    var game = new Game(ctx_1, canvas_1, ctx_2, canvas_2);
 
     loader = new ImageLoader();
     loader.addImage("img/blocks.png", "blocks");

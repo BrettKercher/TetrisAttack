@@ -306,8 +306,18 @@ body
 #game_window
 {
     background-color: darkgray;
-    width: 192px;
+    width: 576px;
     height: 384px;
     margin: 50px auto 0;
     border: 2px solid #6e6e7b;
+}
+
+#player_1_canvas
+{
+    float: left;
+}
+
+#player_2_canvas
+{
+    float: right;
 }

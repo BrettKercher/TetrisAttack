@@ -11,11 +11,13 @@
  */
 define(["./Board"], function(_board) {
 
-        var Game = function(_ctx, _canvas)
+        var Game = function(_ctx1, _canvas1, _ctx2, _canvas2)
         {
             //Drawing
-            this.ctx            = _ctx;
-            this.canvas         = _canvas;
+            this.ctx_1            = _ctx1;
+            this.canvas_1         = _canvas1;
+            this.ctx_2            = _ctx2;
+            this.canvas_2         = _canvas2;
             this.block_img      = null;
             this.cursor_img     = null;
 
@@ -69,9 +71,10 @@ define(["./Board"], function(_board) {
                 this.prevTime = this.curTime;
             }
 
-            this.ctx.clearRect(0,0,this.player_1.GRID_W, this.player_1.GRID_H);
-            this.player_1.Draw(this.ctx, this.block_img, this.cursor_img);
-            //this.player_2.Draw(this.ctx, this.block_img, this.cursor_img);
+            this.ctx_1.clearRect(0,0,this.player_1.GRID_W, this.player_1.GRID_H);
+            this.ctx_2.clearRect(0,0,this.player_1.GRID_W, this.player_1.GRID_H);
+            this.player_1.Draw(this.ctx_1, this.block_img, this.cursor_img);
+            this.player_2.Draw(this.ctx_2, this.block_img, this.cursor_img);
 
             if(!this.isGameOver)
             {
@@ -97,37 +100,70 @@ define(["./Board"], function(_board) {
 
             if(!this.isGameOver)
             {
-                switch(e.keyCode) {
-                    case UP:
+                switch(e.keyCode)
+                {
+                    //Player One controls
+                    case PLAYER_ONE_UP:
                         e.preventDefault();
                         if (c1.y > 0)
                             c1.y -= 1;
                         break;
-                    case LEFT:
+                    case PLAYER_ONE_LEFT:
                         e.preventDefault();
                         if (c1.x > 0)
                             c1.x -= 1;
                         break;
-                    case DOWN:
+                    case PLAYER_ONE_DOWN:
                         e.preventDefault();
                         if (c1.y < (this.player_1.ROWS - 1)) {
                             console.log("down");
                             c1.y += 1;
                         }
                         break;
-                    case RIGHT:
+                    case PLAYER_ONE_RIGHT:
                         e.preventDefault();
                         if(c1.x < (this.player_1.COLS - 2))
                             c1.x += 1;
                         break;
-                    case SELECT:
+                    case PLAYER_ONE_SELECT:
                         e.preventDefault();
                         this.player_1.swap_blocks(c1.y, c1.x);
-                        this.player_2.swap_blocks(c2.y, c2.x);
                         break;
-                    case SCROLL:
+                    case PLAYER_ONE_SCROLL:
                         e.preventDefault();
                         this.player_1.add_row();
+                        break;
+
+                    //Player two controls
+                    case PLAYER_TWO_UP:
+                        e.preventDefault();
+                        if (c2.y > 0)
+                            c2.y -= 1;
+                        break;
+                    case PLAYER_TWO_LEFT:
+                        e.preventDefault();
+                        if (c2.x > 0)
+                            c2.x -= 1;
+                        break;
+                    case PLAYER_TWO_DOWN:
+                        e.preventDefault();
+                        if (c2.y < (this.player_2.ROWS - 1)) {
+                            console.log("down");
+                            c2.y += 1;
+                        }
+                        break;
+                    case PLAYER_TWO_RIGHT:
+                        e.preventDefault();
+                        if(c2.x < (this.player_2.COLS - 2))
+                            c2.x += 1;
+                        break;
+                    case PLAYER_TWO_SELECT:
+                        e.preventDefault();
+                        this.player_2.swap_blocks(c2.y, c2.x);
+                        break;
+                    case PLAYER_TWO_SCROLL:
+                        e.preventDefault();
+                        this.player_2.add_row();
                         break;
                     default:
                         break;
