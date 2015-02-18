@@ -13,22 +13,25 @@ define(["./Board"], function(_board) {
 
         var Game = function(_ctx1, _canvas1, _ctx2, _canvas2)
         {
+            this.ticks              = 0;
+            this.startSeconds      = new Date().getTime();
+
             //Drawing
-            this.ctx_1            = _ctx1;
-            this.canvas_1         = _canvas1;
-            this.ctx_2            = _ctx2;
-            this.canvas_2         = _canvas2;
-            this.block_img      = null;
-            this.cursor_img     = null;
+            this.ctx_1              = _ctx1;
+            this.canvas_1           = _canvas1;
+            this.ctx_2              = _ctx2;
+            this.canvas_2           = _canvas2;
+            this.block_img          = null;
+            this.cursor_img         = null;
 
             //Game Data
-            this.player_1       = new _board();
-            this.player_2       = new _board();
+            this.player_1           = new _board();
+            this.player_2           = new _board();
 
             //Game Flow
-            this.prevTime       = new Date().getTime();
-            this.curTime       = new Date().getTime();
-            this.isGameOver     = false;
+            this.prevTime           = new Date().getTime();
+            this.curTime            = new Date().getTime();
+            this.isGameOver         = false;
 
             document.onkeydown = this.handle_input.bind(this);
 
@@ -71,6 +74,9 @@ define(["./Board"], function(_board) {
                 this.prevTime = this.curTime;
             }
 
+            this.player_1.update_blocks();
+            this.player_2.update_blocks();
+
             this.ctx_1.clearRect(0,0,this.player_1.GRID_W, this.player_1.GRID_H);
             this.ctx_2.clearRect(0,0,this.player_1.GRID_W, this.player_1.GRID_H);
             this.player_1.Draw(this.ctx_1, this.block_img, this.cursor_img);
@@ -78,6 +84,8 @@ define(["./Board"], function(_board) {
 
             if(!this.isGameOver)
             {
+                this.ticks++;
+                document.getElementsByTagName('p')[1].innerHTML = this.ticks / ((new Date().getTime() - this.startSeconds) / 1000);
                 requestAnimationFrame(this.Update.bind(this));
             }
             else
@@ -115,8 +123,8 @@ define(["./Board"], function(_board) {
                         break;
                     case PLAYER_ONE_DOWN:
                         e.preventDefault();
-                        if (c1.y < (this.player_1.ROWS - 1)) {
-                            console.log("down");
+                        if (c1.y < (this.player_1.ROWS - 1))
+                        {
                             c1.y += 1;
                         }
                         break;
@@ -147,8 +155,8 @@ define(["./Board"], function(_board) {
                         break;
                     case PLAYER_TWO_DOWN:
                         e.preventDefault();
-                        if (c2.y < (this.player_2.ROWS - 1)) {
-                            console.log("down");
+                        if (c2.y < (this.player_2.ROWS - 1))
+                        {
                             c2.y += 1;
                         }
                         break;

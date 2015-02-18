@@ -2,14 +2,14 @@
  * Created by Brett on 2/4/2015.
  */
 
-define(["./Cursor", "./Block"], function(_cursor, _block) {
+define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader) {
 
         //Create a constructor for a board object
         var Board = function()
         {
             //Board Data
             this.grid_data      = [];
-            this.next_data      = [];
+            this.row_loader     = new _loader();
             this.offset         = 0;
             this.BlockState     = Object.freeze({NORM: 0, FALL: 1, BREAK: 2});
 
@@ -204,7 +204,7 @@ define(["./Cursor", "./Block"], function(_cursor, _block) {
         {
             var r, c, temp_block;
 
-            this.offset++;
+            //this.offset++;
             if(this.offset == this.BLK_SIZE)
             {
                 this.offset = 0;
@@ -219,7 +219,6 @@ define(["./Cursor", "./Block"], function(_cursor, _block) {
                         if(r+1 < this.ROWS)
                         {
                             this.grid_data[r][c] = this.grid_data[r+1][c];
-
                         }
                         else
                         {
@@ -227,6 +226,63 @@ define(["./Cursor", "./Block"], function(_cursor, _block) {
                             this.grid_data[r][c] = temp_block;
                         }
                     }
+                }
+            }
+        };
+
+//--------------------------------------------------------------------------------------------------------------------\\
+
+        Board.prototype.update_blocks = function()
+        {
+            var r, c;
+            for(r = this.ROWS - 1; r >= 0; r--)
+            {
+                for(c = this.COLS-1; c >= 0; c--)
+                {
+                    var block = this.grid_data[r][c];
+                    if(block && block != -1)
+                    {
+                        block.update();
+
+                        switch (block.get_state())
+                        {
+                            case this.BlockState.NORM:
+                                //Don't need to do anything
+                                break;
+
+                            case this.BlockState.FALL:
+                                if(block.offset >= this.BLK_SIZE)
+                                {
+                                    block.pos_y += this.BLK_SIZE;
+                                    block.offset = 0;
+                                    this.grid_data[r+1][c] = block;
+                                    this.grid_data[r][c] = 0;
+
+                                    if((r+2) < this.ROWS)
+                                    {
+                                        if(this.grid_data[r+2][c] != 0)
+                                        {
+                                            this.grid_data[r + 1][c].SetState(this.BlockState.NORM);
+                                        }
+                                        else
+                                        {
+                                            this.grid_data[r+2][c] = -1;
+                                        }
+                                    }
+
+                                }
+                                break;
+
+                            case this.BlockState.BREAK:
+
+                                break;
+
+                            default:
+                                console.log("Unknown block state");
+                                break;
+                        }
+                    }
+
                 }
             }
         };
@@ -255,10 +311,11 @@ define(["./Cursor", "./Block"], function(_cursor, _block) {
             {
                 for(var c = 0; c < this.COLS; c++)
                 {
-                    if(this.grid_data[r][c] != 0)
+                    var block = this.grid_data[r][c];
+                    if(block != 0)
                     {
-                        ctx.drawImage(block_img, (this.grid_data[r][c].block_type - 1) * this.BLK_SIZE, 0, this.BLK_SIZE,
-                            this.BLK_SIZE, this.grid_data[r][c].pos_x, this.grid_data[r][c].pos_y - this.offset,
+                        ctx.drawImage(block_img, (block.block_type - 1) * this.BLK_SIZE, 0, this.BLK_SIZE,
+                            this.BLK_SIZE, block.pos_x, (block.pos_y - this.offset + block.offset),
                             this.BLK_SIZE, this.BLK_SIZE);
                     }
                 }
@@ -272,186 +329,66 @@ define(["./Cursor", "./Block"], function(_cursor, _block) {
 
         Board.prototype.swap_blocks = function(y, x)
         {
-            var did_fall = false;
+            if((this.grid_data[y][x] == 0 && this.grid_data[y][x+1] == 0)
+                || this.grid_data[y][x] == -1 || this.grid_data[y][x+1] == -1
+                || (this.grid_data[y][x] != 0 && this.grid_data[y][x].get_state() == this.BlockState.FALL)
+                || (this.grid_data[y][x+1] != 0 && this.grid_data[y][x+1].get_state() == this.BlockState.FALL))
+                return;
 
-            if(this.grid_data[y][x] == 0 && this.grid_data[y][x+1] == 0)
+            var temp = this.grid_data[y][x];
+
+            //Do the swap
+            this.grid_data[y][x] = this.grid_data[y][x+1];
+            if(this.grid_data[y][x])
             {
-                //Do nothing
-            }
-            else if(this.grid_data[y][x] == 0)
-            {
-                this.grid_data[y][x] = this.grid_data[y][x+1];
                 this.grid_data[y][x].pos_x -= this.BLK_SIZE;
+            }
 
-                this.grid_data[y][x+1] = 0;
+            this.grid_data[y][x+1] = temp;
+            if(this.grid_data[y][x+1])
+            {
+                this.grid_data[y][x + 1].pos_x += this.BLK_SIZE;
+            }
 
-                if((y+1) < this.ROWS && this.grid_data[y+1][x] == 0)
+
+            //Check for falling
+            if(!this.grid_data[y][x + 1])
+            {
+                if(!this.grid_data[y+1][x])
                 {
-                    did_fall = true;
-                    this.fall(y, x);
+                    this.grid_data[y][x].SetState(this.BlockState.FALL);
+                    this.grid_data[y+1][x] = -1;
                 }
-                if((y-1) >= 0 && this.grid_data[y-1][x+1] != 0)
+                if(this.grid_data[y-1][x+1])
                 {
-                    did_fall = true;
-                    this.fall(y-1, x+1);
-                }
-                if(did_fall)
-                    this.check_all();
-                else
-                    this.clear_combos(y, x);
-            }
-            else if(this.grid_data[y][x+1] == 0)
-            {
-                this.grid_data[y][x+1] = this.grid_data[y][x];
-                this.grid_data[y][x+1].pos_x += this.BLK_SIZE;
-
-                this.grid_data[y][x] = 0;
-
-                if((y+1) < this.ROWS && this.grid_data[y+1][x+1] == 0)
-                {
-                    did_fall = true;
-                    this.fall(y, x + 1);
-                }
-                if((y-1) >= 0 && this.grid_data[y-1][x] != 0)
-                {
-                    did_fall = true;
-                    this.fall(y - 1, x);
-                }
-
-                if(did_fall)
-                    this.check_all();
-                else
-                    this.clear_combos(y, x+1);
-            }
-            else
-            {
-                var temp = this.grid_data[y][x];
-
-                this.grid_data[y][x] = this.grid_data[y][x+1];
-                this.grid_data[y][x].pos_x -= this.BLK_SIZE;
-
-                this.grid_data[y][x+1] = temp;
-                this.grid_data[y][x+1].pos_x += this.BLK_SIZE;
-
-                this.clear_combos(y, x);
-                this.clear_combos(y, x+1);
-            }
-        };
-
-//--------------------------------------------------------------------------------------------------------------------\\
-
-        /*
-         * Move the block at location y,x and all blocks above it down
-         */
-        Board.prototype.fall = function(y, x)
-        {
-            var i = y;
-            var count = 0;
-            //Go up the block stack until hitting a blank space
-            while( this.grid_data[i][x] != 0)
-            {
-                this.grid_data[i][x].state = this.BlockState.FALL;
-                count++;
-                i--;
-            }
-            i+= count;
-            while(count > 0)
-            {
-                while ((i + 1) < this.ROWS && this.grid_data[i + 1][x] == 0)
-                {
-                    this.grid_data[i + 1][x] = this.grid_data[i][x];
-                    this.grid_data[i + 1][x].pos_y += this.BLK_SIZE;
-                    this.grid_data[i][x] = 0;
-                    i++;
-                }
-                count--;
-                y--;
-                i=y;
-            }
-        };
-
-//--------------------------------------------------------------------------------------------------------------------\\
-
-        Board.prototype.clear_combos = function(y, x)
-        {
-            var i = y;
-            var j = x;
-            var count = 0;
-            var grid_data = this.grid_data;
-
-            //Move i to the top most block in the potential combo
-            while(i >= 0 && grid_data[i][j].block_type == grid_data[y][x].block_type)
-            {
-                i--;
-            }
-            i++;
-
-            //Check vertical combos
-            while(i < this.ROWS && grid_data[i][j].block_type == grid_data[y][x].block_type)
-            {
-                count++;
-                i++;
-            }
-            if(count >= 3)
-            {
-                console.log(count);
-                i -= count;
-                var top = i - 1;
-                while(count > 0)
-                {
-                    grid_data[i][j].state = this.BlockState.BREAK;
-                    grid_data[i][j] = 0;
-                    count--;
-                    i++;
-                }
-                this.fall(top, j);
-            }
-
-            count = 0;
-            i = y;
-
-            //Move j to the left most block in the potential combo
-            while(j >= 0 && grid_data[i][j].block_type == grid_data[y][x].block_type)
-            {
-                j--;
-            }
-            j++;
-
-            //Check horizontal combos
-            while(j < this.COLS && grid_data[i][j].block_type == grid_data[y][x].block_type)
-            {
-                count++;
-                j++;
-            }
-            if(count >= 3)
-            {
-                j -= count;
-                while(count > 0)
-                {
-                    grid_data[i][j].state = this.BlockState.BREAK;
-                    grid_data[i][j] = 0;
-                    count--;
-                    this.fall(y-1, j);
-                    j++;
-                }
-            }
-        };
-
-//--------------------------------------------------------------------------------------------------------------------\\
-
-        Board.prototype.check_all = function()
-        {
-            var r, c;
-            for(r = 0; r < this.ROWS; r++)
-            {
-                for(c = 0; c < this.COLS; c++)
-                {
-                    if(this.grid_data[r][c] != 0)
+                    this.grid_data[y][x + 1] = -1;
+                    var i = y-1;
+                    while(i >= 0 && this.grid_data[i][x+1])
                     {
-                        this.clear_combos(r, c);
+                        this.grid_data[i--][x+1].SetState(this.BlockState.FALL);
                     }
                 }
             }
+
+            if(!this.grid_data[y][x])
+            {
+                if(!this.grid_data[y+1][x+1])
+                {
+                    this.grid_data[y][x+1].SetState(this.BlockState.FALL);
+                    this.grid_data[y+1][x+1] = -1;
+                }
+                if(this.grid_data[y-1][x])
+                {
+                    this.grid_data[y][x] = -1;
+                    var i = y-1;
+                    while(i >= 0 && this.grid_data[i][x])
+                    {
+                        this.grid_data[i--][x].SetState(this.BlockState.FALL);
+                    }
+                }
+            }
+
+
         };
 
 //--------------------------------------------------------------------------------------------------------------------\\
