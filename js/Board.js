@@ -174,20 +174,26 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
         var r, c, temp_block;
 
         this.offset++;
-        if (this.offset == this.BLK_SIZE) {
+        if (this.offset == this.BLK_SIZE)
+        {
             this.offset = 0;
             this.cursor.y--;
 
-            for (r = 0; r < this.ROWS; r++) {
-                for (c = 0; c < this.COLS; c++) {
+            for (r = 0; r < this.ROWS; r++)
+            {
+                for (c = 0; c < this.COLS; c++)
+                {
                     this.grid_data[r][c].pos_y -= this.BLK_SIZE;
 
-                    if (r + 1 < this.ROWS) {
+                    if (r + 1 < this.ROWS)
+                    {
                         this.grid_data[r][c] = this.grid_data[r + 1][c];
                     }
-                    else {
+                    else
+                    {
                         temp_block = new _block(r, c, Math.floor(Math.random() * 5) + 1, this.BLK_SIZE);
                         this.grid_data[r][c] = temp_block;
+                        this.grid_data[r][c].can_break = true;
                     }
                 }
             }
