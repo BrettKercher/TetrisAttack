@@ -223,7 +223,7 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
 
                                     if ((r + 2) < this.ROWS)
                                     {
-                                        if (this.grid_data[r + 2][c] != 0)
+                                        if (this.grid_data[r + 2][c] && this.grid_data[r + 2][c] != -1)
                                         {
                                             if(this.grid_data[r + 2][c].get_state() != this.BlockState.FALL)
                                             {
@@ -246,15 +246,21 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
                             break;
 
                         case this.BlockState.BREAK:
-                                var i = r - 1;
-                                this.grid_data[r][c].can_break = false;
-                                while (i >= 0 && this.grid_data[i][c])
+                                if(block.break_delay <= 0)
                                 {
-                                    if(this.grid_data[i][c].get_state() != this.BlockState.BREAK)
-                                        this.grid_data[i][c].SetState(this.BlockState.FALL);
-                                    i--;
+                                    var i = r - 1;
+                                    this.grid_data[r][c].can_break = false;
+                                    while (i >= 0 && this.grid_data[i][c] && this.grid_data[i][c] != -1) {
+                                        if (this.grid_data[i][c].get_state() != this.BlockState.BREAK)
+                                            this.grid_data[i][c].SetState(this.BlockState.FALL);
+                                        i--;
+                                    }
+                                    this.grid_data[r][c] = 0;
                                 }
-                                this.grid_data[r][c] = 0;
+                                else
+                                {
+                                    block.break_delay -= 1;
+                                }
                             break;
 
                         default:
@@ -271,11 +277,13 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
 
     //--------------------------------------------------------------------------------------------------------------------\\
 
-    Board.prototype.add_row = function () {
+    Board.prototype.add_row = function ()
+    {
         var temp_block;
         var temp_row = [];
 
-        for (var c = 0; c < this.COLS; c++) {
+        for (var c = 0; c < this.COLS; c++)
+        {
             temp_block = new _block(this.ROWS, c, Math.floor(Math.random() * 5) + 1, this.BLK_SIZE);
             temp_row.push(temp_block);
         }
@@ -285,14 +293,27 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
 
     //--------------------------------------------------------------------------------------------------------------------\\
 
-    Board.prototype.Draw = function (ctx, block_img, cursor_img) {
-        for (var r = 0; r < this.ROWS; r++) {
-            for (var c = 0; c < this.COLS; c++) {
+    Board.prototype.Draw = function (ctx, block_img, cursor_img, break_img)
+    {
+        for (var r = 0; r < this.ROWS; r++)
+        {
+            for (var c = 0; c < this.COLS; c++)
+            {
                 var block = this.grid_data[r][c];
-                if (block != 0) {
-                    ctx.drawImage(block_img, (block.block_type - 1) * this.BLK_SIZE, 0, this.BLK_SIZE,
-                        this.BLK_SIZE, block.pos_x, (block.pos_y - this.offset + block.offset),
-                        this.BLK_SIZE, this.BLK_SIZE);
+                if (block != 0 && block != -1)
+                {
+                    if(block.get_state() != this.BlockState.BREAK)
+                    {
+                        ctx.drawImage(block_img, (block.block_type - 1) * this.BLK_SIZE, 0, this.BLK_SIZE,
+                            this.BLK_SIZE, block.pos_x, (block.pos_y - this.offset + block.offset),
+                            this.BLK_SIZE, this.BLK_SIZE);
+                    }
+                    else
+                    {
+                        ctx.drawImage(break_img, (block.block_type - 1) * this.BLK_SIZE, 0, this.BLK_SIZE,
+                            this.BLK_SIZE, block.pos_x, (block.pos_y - this.offset + block.offset),
+                            this.BLK_SIZE, this.BLK_SIZE);
+                    }
                 }
             }
         }
@@ -303,55 +324,68 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
 
     //--------------------------------------------------------------------------------------------------------------------\\
 
-    Board.prototype.swap_blocks = function (y, x) {
+    Board.prototype.swap_blocks = function (y, x)
+    {
         if ((this.grid_data[y][x] == 0 && this.grid_data[y][x + 1] == 0)
             || this.grid_data[y][x] == -1 || this.grid_data[y][x + 1] == -1
             || (this.grid_data[y][x] != 0 && this.grid_data[y][x].get_state() == this.BlockState.FALL)
-            || (this.grid_data[y][x + 1] != 0 && this.grid_data[y][x + 1].get_state() == this.BlockState.FALL))
+            || (this.grid_data[y][x + 1] != 0 && this.grid_data[y][x + 1].get_state() == this.BlockState.FALL)
+            || (this.grid_data[y][x] != 0 && this.grid_data[y][x].get_state() == this.BlockState.BREAK)
+            || (this.grid_data[y][x + 1] != 0 && this.grid_data[y][x + 1].get_state() == this.BlockState.BREAK))
             return;
 
         var temp = this.grid_data[y][x];
 
         //Do the swap
         this.grid_data[y][x] = this.grid_data[y][x + 1];
-        if (this.grid_data[y][x]) {
+        if (this.grid_data[y][x])
+        {
             this.grid_data[y][x].pos_x -= this.BLK_SIZE;
             this.grid_data[y][x].can_break = true;
         }
 
         this.grid_data[y][x + 1] = temp;
-        if (this.grid_data[y][x + 1]) {
+        if (this.grid_data[y][x + 1])
+        {
             this.grid_data[y][x + 1].pos_x += this.BLK_SIZE;
             this.grid_data[y][x + 1].can_break = true;
         }
 
 
         //Check for falling
-        if (!this.grid_data[y][x + 1]) {
-            if (!this.grid_data[y + 1][x]) {
+        if (!this.grid_data[y][x + 1])
+        {
+            if (y+1 < this.ROWS && !this.grid_data[y + 1][x])
+            {
                 this.grid_data[y][x].SetState(this.BlockState.FALL);
                 this.grid_data[y][x].can_break = false;
                 this.grid_data[y + 1][x] = -1;
             }
-            if (this.grid_data[y - 1][x + 1]) {
+            if (y-1 >= 0 && this.grid_data[y - 1][x + 1])
+            {
                 this.grid_data[y][x + 1] = -1;
                 var i = y - 1;
-                while (i >= 0 && this.grid_data[i][x + 1]) {
+                while (i >= 0 && this.grid_data[i][x + 1] && this.grid_data[i][x+1] != -1)
+                {
                     this.grid_data[i--][x + 1].SetState(this.BlockState.FALL);
                 }
             }
         }
 
-        if (!this.grid_data[y][x]) {
-            if (!this.grid_data[y + 1][x + 1]) {
+        if (!this.grid_data[y][x])
+        {
+            if (y+1 < this.ROWS && !this.grid_data[y + 1][x + 1])
+            {
                 this.grid_data[y][x + 1].SetState(this.BlockState.FALL);
                 this.grid_data[y][x + 1].can_break = false;
                 this.grid_data[y + 1][x + 1] = -1;
             }
-            if (this.grid_data[y - 1][x]) {
+            if (y-1 >= 0 && this.grid_data[y - 1][x])
+            {
                 this.grid_data[y][x] = -1;
                 var i = y - 1;
-                while (i >= 0 && this.grid_data[i][x]) {
+                while (i >= 0 && this.grid_data[i][x] && this.grid_data[i][x] != -1)
+                {
                     this.grid_data[i--][x].SetState(this.BlockState.FALL);
                 }
             }
@@ -393,7 +427,10 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
 
                 if(count >= 3)
                     while(--j > x)
+                    {
                         this.grid_data[y][j].state = this.BlockState.BREAK;
+                        this.grid_data[y][j].startBreakDelay();
+                    }
 
                 //reset
                 count = 0;
@@ -413,7 +450,10 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
 
                 if(count >= 3)
                     while(--i > y)
+                    {
                         this.grid_data[i][x].state = this.BlockState.BREAK;
+                        this.grid_data[i][x].startBreakDelay();
+                    }
 
                 this.grid_data[r][c].can_break = false;
             }

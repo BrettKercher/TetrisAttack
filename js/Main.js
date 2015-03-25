@@ -35,6 +35,7 @@ require(["./Game", "./ImageLoader"], function(Game, ImageLoader)
     loader = new ImageLoader();
     loader.addImage("img/blocks.png", "blocks");
     loader.addImage("img/cursor.png", "cursor");
+    loader.addImage("img/breaking.png", "breaking");
     loader.onReadyCallback = game.init.bind(game);
     loader.loadImages();
 });

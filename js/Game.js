@@ -23,6 +23,7 @@ define(["./Board"], function(_board) {
             this.canvas_2           = _canvas2;
             this.block_img          = null;
             this.cursor_img         = null;
+            this.break_img          = null;
 
             //Game Data
             this.player_1           = new _board();
@@ -47,6 +48,7 @@ define(["./Board"], function(_board) {
         {
             this.block_img = loader.getImageByName("blocks");
             this.cursor_img = loader.getImageByName("cursor");
+            this.break_img = loader.getImageByName("breaking");
 
             this.player_1.init();
             this.player_2.init();
@@ -79,8 +81,8 @@ define(["./Board"], function(_board) {
 
             this.ctx_1.clearRect(0,0,this.player_1.GRID_W, this.player_1.GRID_H);
             this.ctx_2.clearRect(0,0,this.player_1.GRID_W, this.player_1.GRID_H);
-            this.player_1.Draw(this.ctx_1, this.block_img, this.cursor_img);
-            this.player_2.Draw(this.ctx_2, this.block_img, this.cursor_img);
+            this.player_1.Draw(this.ctx_1, this.block_img, this.cursor_img, this.break_img);
+            this.player_2.Draw(this.ctx_2, this.block_img, this.cursor_img, this.break_img);
 
             if(!this.isGameOver)
             {

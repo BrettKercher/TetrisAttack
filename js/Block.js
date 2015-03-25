@@ -14,6 +14,7 @@ define([], function() {
 
         var Block = function(y, x, type, size)
         {
+            this.FALL_SPEED     = 10;
             this.BlockState     = Object.freeze({NORM: 0, FALL: 1, BREAK: 2});
             this.block_type     = type;
             this.pos_x          = x * size;
@@ -21,6 +22,7 @@ define([], function() {
             this.offset         = 0;
             this.state          = 0;
             this.can_break      = false;
+            this.break_delay    = 0;
         };
 
 //--------------------------------------------------------------------------------------------------------------------\\
@@ -39,6 +41,13 @@ define([], function() {
 
 //--------------------------------------------------------------------------------------------------------------------\\
 
+        Block.prototype.startBreakDelay = function()
+        {
+            this.break_delay = 50;
+        };
+
+//--------------------------------------------------------------------------------------------------------------------\\
+
         Block.prototype.update = function()
         {
             switch(this.state)
@@ -48,7 +57,7 @@ define([], function() {
                     break;
 
                 case this.BlockState.FALL:
-                        this.offset++;
+                        this.offset+=this.FALL_SPEED;
                         break;
 
                 case this.BlockState.BREAK:
