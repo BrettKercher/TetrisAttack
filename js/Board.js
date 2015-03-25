@@ -11,7 +11,7 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
         this.grid_data = [];
         this.row_loader = new _loader();
         this.offset = 0;
-        this.BlockState = Object.freeze({NORM: 0, FALL: 1, BREAK: 2});
+        this.BlockState = Object.freeze({NORM: 0, FALL: 1, BREAK: 2, TO_BREAK: 3});
 
         //Board Constants
         this.ROWS = 12; //distinguish between visible rows and actual rows
@@ -263,6 +263,10 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
                                 }
                             break;
 
+                        case this.BlockState.TO_BREAK:
+
+                            break;
+
                         default:
                             console.log("Unknown block state");
                             break;
@@ -415,11 +419,11 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
                 //check for matches
 
                 //go all the way left, check for horizontal matches
-                while(x >= 0 && this.grid_data[y][x].block_type == this.grid_data[r][c].block_type)
+                while(x >= 0 && this.grid_data[y][x].state != this.BlockState.BREAK && this.grid_data[y][x].block_type == this.grid_data[r][c].block_type)
                     x--;
 
                 j = x+1;
-                while(j < this.COLS && this.grid_data[y][j].block_type == this.grid_data[r][c].block_type)
+                while(j < this.COLS && this.grid_data[y][j].state != this.BlockState.BREAK && this.grid_data[y][j].block_type == this.grid_data[r][c].block_type)
                 {
                     count++;
                     j++;
@@ -428,8 +432,7 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
                 if(count >= 3)
                     while(--j > x)
                     {
-                        this.grid_data[y][j].state = this.BlockState.BREAK;
-                        this.grid_data[y][j].startBreakDelay();
+                        this.grid_data[y][j].state = this.BlockState.TO_BREAK;
                     }
 
                 //reset
@@ -438,11 +441,11 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
                 x = c;
 
                 //go all the way up, check for vertical matches
-                while(y >= 0 && this.grid_data[y][x].block_type == this.grid_data[r][c].block_type)
+                while(y >= 0 && this.grid_data[y][x].state != this.BlockState.BREAK && this.grid_data[y][x].block_type == this.grid_data[r][c].block_type)
                     y--;
 
                 i = y+1;
-                while(i < this.ROWS && this.grid_data[i][x].block_type == this.grid_data[r][c].block_type)
+                while(i < this.ROWS && this.grid_data[i][x].state != this.BlockState.BREAK && this.grid_data[i][x].block_type == this.grid_data[r][c].block_type)
                 {
                     count++;
                     i++;
@@ -451,8 +454,7 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
                 if(count >= 3)
                     while(--i > y)
                     {
-                        this.grid_data[i][x].state = this.BlockState.BREAK;
-                        this.grid_data[i][x].startBreakDelay();
+                        this.grid_data[i][x].state = this.BlockState.TO_BREAK;
                     }
 
                 this.grid_data[r][c].can_break = false;
