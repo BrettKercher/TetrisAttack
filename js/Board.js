@@ -14,11 +14,12 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
         this.BlockState = Object.freeze({NORM: 0, FALL: 1, BREAK: 2, TO_BREAK: 3});
 
         //Board Constants
-        this.ROWS = 12; //distinguish between visible rows and actual rows
-        this.COLS = 6;
-        this.BLK_SIZE = 32;
-        this.GRID_W = this.COLS * this.BLK_SIZE;
-        this.GRID_H = this.ROWS * this.BLK_SIZE;
+        this.ROWS       = 12; //distinguish between visible rows and actual rows
+        this.COLS       = 6;
+        this.BLK_SIZE   = 32;
+        this.GRID_W     = this.COLS * this.BLK_SIZE;
+        this.GRID_H     = this.ROWS * this.BLK_SIZE;
+        this.FALL_DELAY = 10;
 
         //Board Objects
         this.cursor = new _cursor(this.COLS / 2, this.ROWS / 2);
@@ -235,6 +236,7 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
                                             {
                                                 this.grid_data[r + 1][c].SetState(this.BlockState.NORM);
                                                 this.grid_data[r + 1][c].can_break = true;
+                                                this.grid_data[r + 1][c].fall_delay = this.FALL_DELAY;
                                             }
                                         }
                                         else
@@ -246,6 +248,7 @@ define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader
                                     {
                                         this.grid_data[r + 1][c].SetState(this.BlockState.NORM);
                                         this.grid_data[r + 1][c].can_break = true;
+                                        this.grid_data[r + 1][c].fall_delay = this.FALL_DELAY;
                                     }
 
                                 }

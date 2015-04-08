@@ -15,6 +15,7 @@ define([], function() {
         var Block = function(y, x, type, size)
         {
             this.FALL_SPEED     = 8;
+            this.fall_delay     = 10;
             this.BlockState     = Object.freeze({NORM: 0, FALL: 1, BREAK: 2, TO_BREAK: 3});
             this.block_type     = type;
             this.pos_x          = x * size;
@@ -58,7 +59,11 @@ define([], function() {
                     break;
 
                 case this.BlockState.FALL:
-                        this.offset+=this.FALL_SPEED;
+                        this.fall_delay--;
+                        if(this.fall_delay <= 0)
+                        {
+                            this.offset += this.FALL_SPEED;
+                        }
                         break;
 
                 case this.BlockState.BREAK:
@@ -68,6 +73,9 @@ define([], function() {
                 case this.BlockState.TO_BREAK:
                     this.break_delay = this.max_delay;
                     this.state = this.BlockState.BREAK;
+                    break;
+
+                case this.BlockState.PRE_FALL:
                     break;
 
                 default:
