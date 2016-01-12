@@ -1,0 +1,10 @@
+.panel-primary > .panel-footer {
+	background-image: linear-gradient(to bottom, #337AB7 0px, #2E6DA4 100%);
+	color: #FFF;
+	background-color: #337AB7;
+	border-color: #337AB7;
+}
+
+.navbar {
+	margin-top: 20px;
+}
