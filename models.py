@@ -13,3 +13,20 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+class Trainers(db.Model):
+	__tablename__ = "ALL_TRAINERS"
+
+	ID = db.Column(db.Integer, primary_key=True)
+	TRAINER_NAME = db.Column(db.VARCHAR(50))
+	TRAINER_GEN = db.Column(db.VARCHAR(50))
+	TRAINER_ROUTE_NAME = db.Column(db.VARCHAR(50))
+	TRAINER_POKEMON = db.Column(db.VARCHAR(50))
+	TRAINER_LEVEL = db.Column(db.VARCHAR(50))
+
+	def __init__(self, name, gen, route, pokemon, level):
+		self.TRAINER_NAME = name
+		self.TRAINER_GEN = gen
+		self.TRAINER_ROUTE = route
+		self.TRAINER_POKEMON = pokemon
+		self.TRAINER_LEVEL = level
