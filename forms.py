@@ -1,12 +1,12 @@
 from models import User
 from flask.ext.wtf import Form
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Email
 
 class LoginForm(Form):
-	email = StringField('Email', validators=[DataRequired(), validators.Email()])
+	email = StringField('Email', validators=[DataRequired(), Email()])
 	password = PasswordField('Password', validators=[DataRequired()])
-	submit - SubmitField('Submit')
+	submit = SubmitField('Submit')
 
 	def __init__(self, *args, **kwargs):
 		Form.__init__(self, *args, **kwargs)
@@ -28,12 +28,12 @@ class LoginForm(Form):
 
 
 class RegistrationForm(Form):
-	email = StringField('Email', validators=[DataRequired()], validators.Email())
-	confirm_email = StringField('Confirm Email', validators=[DataRequired()], validators.Email())
+	email = StringField('Email', validators=[DataRequired(), Email()])
+	confirm_email = StringField('Confirm Email', validators=[DataRequired(), Email()])
 	password = PasswordField('Password', validators=[DataRequired()])
 	confirm_password = PasswordField('Confirm Password', validators=[DataRequired()])
 	username = StringField('Username', validators=[DataRequired()])
-	submit - SubmitField('Submit')
+	submit = SubmitField('Submit')
 
 	def __init__(self, *args, **kwargs):
 		Form.__init__(self, *args, **kwargs)

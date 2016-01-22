@@ -2,36 +2,38 @@
 
 {% block head %}
 	<title>Tetris Attack</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/registration.css') }}">
 {% endblock %}
 
 {% block content %}
 
-	<h3>Create your Account</h3>
+	<div id="register">
+		<h3>Create your Account</h3>
+		<form method="POST" action="{{ url_for('registration') }}">
+			{{ form.hidden_tag() }}
 
-	<form method="POST" action="{{ url_for('registration') }}">
-		{{ form.hidden_tag() }}
+			{{ form.email.label }}
+			{{ form.email(size=20) }}
+			{{ form.email.errors }}
 
-		{{ form.email.label }}
-		{{ form.email(size=20) }}
-		{{ form.email.errors }}
+			{{ form.confirm_email.label }}
+			{{ form.confirm_email(size=20) }}
+			{{ form.confirm_email.errors }}
 
-		{{ form.confirm_email.label }}
-		{{ form.confirm_email(size=20) }}
-		{{ form.confirm_email.errors }}
+			{{ form.password.label }}
+			{{ form.password(size=20) }}
+			{{ form.password.errors }}
 
-		{{ form.password.label }}
-		{{ form.password(size=20) }}
-		{{ form.password.errors }}
+			{{ form.confirm_password.label }}
+			{{ form.confirm_password(size=20) }}
+			{{ form.confirm_password.errors }}
 
-		{{ form.confirm_password.label }}
-		{{ form.confirm_password(size=20) }}
-		{{ form.confirm_password.errors }}
+			{{ form.username.label }}
+			{{ form.username(size=20) }}
+			{{ form.username.errors }}
 
-		{{ form.username.label }}
-		{{ form.username(size=20) }}
-		{{ form.username.errors }}
-
-		{{ form.submit }}
-	</form>
+			{{ form.submit }}
+		</form>
+	</div>
 
 {% endblock %}

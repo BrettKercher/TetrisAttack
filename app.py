@@ -22,18 +22,18 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
+	form = LoginForm()
+	if form.validate_on_submit():
 		return redirect(url_for('index'))
-    return render_template('login.html', form=form)
+	return render_template('login.html', form=form)
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
-    form = RegistrationForm()
-    if form.validate_on_submit():
+	form = RegistrationForm()
+	if form.validate_on_submit():
 		User.add_user(form.username.data, form.email.data, form.password.data)
 		return redirect(url_for('index'))
-    return render_template('registration.html', form=form)
+	return render_template('registration.html', form=form)
 
 if __name__ == '__main__':
 	app.run(host="0.0.0.0", port=8000)
