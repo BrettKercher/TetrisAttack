@@ -8,9 +8,15 @@
 
 	<form method="POST" action="/login">
 		{{ form.hidden_tag() }}
-		{{ form.email.label }} {{ form.email(size=20) }}
-		{{ form.password.label }} {{ form.password(size=20) }}
-		<input type="submit" value="Go">
+		{{ form.email.label }}
+		{{ form.email(size=20) }}
+		{{ form.email.errors }}
+
+		{{ form.password.label }}
+		{{ form.password(size=20) }}
+		{{ form.password.errors }}
+
+		{{ form.submit }}
 	</form>
 
 {% endblock %}

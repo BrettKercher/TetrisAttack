@@ -41,3 +41,9 @@ class User(db.Model):
 	@staticmethod
 	def get_by_name(name):
 		return User.query.filter_by(username=name).first()
+
+	@staticmethod
+	def add_user(username, email, password):
+		user = User(username, email, password)
+		db.session.add(user)
+		db.session.commit()
