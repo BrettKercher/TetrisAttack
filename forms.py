@@ -1,11 +1,11 @@
 from models import User
 from flask.ext.wtf import Form
-from wtforms import TextField, PasswordField, BooleanField
-from wtforms.validators import Required
+from wtforms import StringField, PasswordField
+from wtforms.validators import DataRequired
 
 class LoginForm(Form):
-	username = TextField('Username', [Required])
-	password = PasswordField('Password', [Required])
+	email = StringField('Email', validators=[DataRequired()])
+	password = PasswordField('Password', validators=[DataRequired()])
 
 	def __init__(self, *args, **kwargs):
 		Form.__init__(self, *args, **kwargs)
@@ -17,7 +17,7 @@ class LoginForm(Form):
 			return False
 		user = User.get_by_email(self.email.data)
 		if user is None:
-			self.username.errors.append('Unknown username')
+			self.email.errors.append('Unknown email')
 			return False
 		if not user.check_password(self.password.data):
 			self.password.errors.append('Invalid password')

@@ -69,3 +69,6 @@ venv/
 *.egg-info/
 .installed.cfg
 *.egg
+
+#Config File
+config.py
