@@ -13,26 +13,26 @@
 			{{ form.hidden_tag() }}
 
 			{{ form.email.label }}
-			{{ form.email(size=20) }}
 			{{ form.email.errors }}
+			{{ form.email(size=20, **{'data-icon':'e', 'class':'reg-email'} ) }}
 
 			{{ form.confirm_email.label }}
-			{{ form.confirm_email(size=20) }}
 			{{ form.confirm_email.errors }}
+			{{ form.confirm_email(size=20, **{'data-icon':'e', 'class':'reg-email'}) }}
 
 			{{ form.password.label }}
-			{{ form.password(size=20) }}
 			{{ form.password.errors }}
+			{{ form.password(size=20, **{'data-icon':'p', 'class':'reg-pass'}) }}
 
 			{{ form.confirm_password.label }}
-			{{ form.confirm_password(size=20) }}
 			{{ form.confirm_password.errors }}
+			{{ form.confirm_password(size=20, **{'data-icon':'p', 'class':'reg-pass'}) }}
 
 			{{ form.username.label }}
-			{{ form.username(size=20) }}
 			{{ form.username.errors }}
+			{{ form.username(size=20, **{'data-icon':'u', 'class':'reg-user'}) }}
 
-			{{ form.submit }}
+			{{ form.submit(**{'class':'reg-submit'}) }}
 		</form>
 	</div>
 

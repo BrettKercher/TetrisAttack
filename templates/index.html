@@ -2,6 +2,7 @@
 
 {% block head %}
 	<title>Tetris Attack</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/index.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -13,7 +14,9 @@
 			<div class="col-md-8">
 				<div class="panel panel-default">
 					<div class="panel-heading">Header</div>
-					<div class="panel-body">A Basic Panel</div>
+					<div class="panel-body">
+						Panel Body
+					</div>
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">Header</div>
@@ -23,15 +26,34 @@
 
 			<div class="col-md-4">
 				<div class="panel panel-default">
-					<div class="panel-heading">Header</div>
-					<div class="panel-body">A Basic Panel</div>
-					<div class="panel-footer">Footer</div>
+					<div class="panel-heading">
+						Welcome,
+						{% if current_user.is_authenticated %}
+							<b>{{ current_user.username }}</b>
+						{% else %}
+							<b>guest</b>
+						{% endif %}
+					</div>
+					<div class="panel-body">
+
+						<div id="left">
+							<img src="" height="64" width="64"/>
+						</div>
+
+						<div id="right">
+							<form method="POST" action="/login">
+								{{ form.hidden_tag() }}
+								{{ form.email(size=20, placeholder="email") }}
+								{{ form.password(size=20, placeholder="password") }}
+								{{ form.submit }}
+							</form>
+						</div>
+
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
-	<!-- Main component for a primary marketing message or call to action -->
       
 
 {% endblock %}

@@ -3,10 +3,11 @@ from flask.ext.wtf import Form
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email
 
+
 class LoginForm(Form):
 	email = StringField('Email', validators=[DataRequired(), Email()])
 	password = PasswordField('Password', validators=[DataRequired()])
-	submit = SubmitField('Submit')
+	submit = SubmitField('Log In')
 
 	def __init__(self, *args, **kwargs):
 		Form.__init__(self, *args, **kwargs)
