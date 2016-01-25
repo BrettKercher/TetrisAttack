@@ -3,7 +3,7 @@
  */
 
 
-define(["./Queue", "./Block"], function(Queue, _block) {
+define(["./queue", "./block"], function(Queue, _block) {
 
         var Loader = function(_board)
         {

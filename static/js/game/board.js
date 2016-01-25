@@ -2,7 +2,7 @@
  * Created by Brett on 2/4/2015.
  */
 
-define(["./Cursor", "./Block", "./RowLoader"], function(_cursor, _block, _loader)
+define(["./cursor", "./block", "./row-loader"], function(_cursor, _block, _loader)
 {
 
     //Create a constructor for a board object

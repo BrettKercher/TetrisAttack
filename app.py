@@ -54,5 +54,9 @@ def registration():
 		return redirect(url_for('index'))
 	return render_template('registration.html', form=form)
 
+@app.route('/play')
+def play():
+	return render_template('game.html')
+
 if __name__ == '__main__':
 	app.run(host="0.0.0.0", port=8000)

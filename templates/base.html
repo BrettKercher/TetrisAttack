@@ -12,8 +12,10 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/lib/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/lib/bootstrap-theme.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/base.css') }}">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="{{ url_for('static',filename='js/lib/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/lib/require.min.js') }}"></script>
 
     {% block head %}{% endblock %}
 
@@ -29,8 +31,7 @@
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
               <li class="active"><a href="/">Home</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Contact</a></li>
+              <li><a href="{{ url_for('play') }}">Play</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li>
@@ -48,10 +49,6 @@
       {% block content %}{% endblock %}
 
     </div>
-      <!-- <div id="game_window">
-        <canvas id="player_1_canvas" width="192" height="384"></canvas>
-        <canvas id="player_2_canvas" width="192" height="384"></canvas>
-      </div> -->
 
   </body>
 </html>
