@@ -48,17 +48,33 @@ require.config({
 
 require(["jquery"], function($)
 {
-    var stage = new createjs.Stage("game-board")
+    var stage = new createjs.Stage("game-board");
 
-    var block_sheet = new createjs.SpriteSheet({
-        "images": ["/static/res/img/blocks.png"],
-        "frames": {"width": 32, "height": 32, "regX": 0, "regY": 0, "count": 5}
-    });
+    block_sheet = new Image();
+    block_sheet.src = '/static/res/img/blocks.png';
+    block_sheet.onload = function(event) {
+        var data = {
+            images: [block_sheet],
+            "frames": {"width": 32, "height": 32, "regX": 0, "regY": 0, "count": 5},
+            animations: {
+                'red': 0,
+                'purple': 1,
+                'green': 2,
+                'blue': 3,
+                'yellow': 4
+            }
+        }
 
-    var block_img = new createjs.Sprite(block_sheet);
-    block_img.gotoAndStop(0);
+        var spritesheet = new createjs.SpriteSheet(data);
+        var animation = new createjs.Sprite(spritesheet, 'yellow');
+        animation.x = 100;
+        animation.y = 100;
 
-    stage.addChild(block_img);
-
-    stage.update();
+        stage.addChild(animation);
+        stage.update();
+        // createjs.Ticker.addEventListener("tick", update);
+        // function update(event) {
+        //     stage.update();
+        // }
+    }
 });

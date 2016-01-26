@@ -29,7 +29,6 @@ define(["jquery", "./board"], function($, _board) {
             this.isGameOver         = false;
 
             document.onkeydown = this.handle_input.bind(this);
-
         };
 
 //--------------------------------------------------------------------------------------------------------------------\\
