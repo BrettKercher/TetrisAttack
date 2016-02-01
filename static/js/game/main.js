@@ -31,50 +31,50 @@ require.config({
 /**
  * Program Entry Point
  */
-// require(["jquery", "game/game", "game/image-loader"], function($, Game, ImageLoader)
-// {
-//     var canvas = $("#player_1_canvas")[0];
-//     var ctx = canvas.getContext("2d");
-
-//     var game = new Game(ctx, canvas);
-
-//     loader = new ImageLoader();
-//     loader.addImage("/static/res/img/blocks.png", "blocks");
-//     loader.addImage("/static/res/img/cursor.png", "cursor");
-//     loader.addImage("/static/res/img/breaking.png", "breaking");
-//     loader.onReadyCallback = game.init.bind(game);
-//     loader.loadImages();
-// });
-
-require(["jquery"], function($)
+require(["jquery", "game/game", "game/image-loader"], function($, Game, ImageLoader)
 {
-    var stage = new createjs.Stage("game-board");
+    var canvas = $("#game-board")[0];
+    var ctx = canvas.getContext("2d");
 
-    block_sheet = new Image();
-    block_sheet.src = '/static/res/img/blocks.png';
-    block_sheet.onload = function(event) {
-        var data = {
-            images: [block_sheet],
-            "frames": {"width": 32, "height": 32, "regX": 0, "regY": 0, "count": 5},
-            animations: {
-                'red': 0,
-                'purple': 1,
-                'green': 2,
-                'blue': 3,
-                'yellow': 4
-            }
-        }
+    var game = new Game(ctx, canvas);
 
-        var spritesheet = new createjs.SpriteSheet(data);
-        var animation = new createjs.Sprite(spritesheet, 'yellow');
-        animation.x = 100;
-        animation.y = 100;
-
-        stage.addChild(animation);
-        stage.update();
-        // createjs.Ticker.addEventListener("tick", update);
-        // function update(event) {
-        //     stage.update();
-        // }
-    }
+    loader = new ImageLoader();
+    loader.addImage("/static/res/img/blocks.png", "blocks");
+    loader.addImage("/static/res/img/cursor.png", "cursor");
+    loader.addImage("/static/res/img/breaking.png", "breaking");
+    loader.onReadyCallback = game.init.bind(game);
+    loader.loadImages();
 });
+
+// require(["jquery"], function($)
+// {
+//     var stage = new createjs.Stage("game-board");
+
+//     block_sheet = new Image();
+//     block_sheet.src = '/static/res/img/blocks.png';
+//     block_sheet.onload = function(event) {
+//         var data = {
+//             images: [block_sheet],
+//             "frames": {"width": 32, "height": 32, "regX": 0, "regY": 0, "count": 5},
+//             animations: {
+//                 'red': 0,
+//                 'purple': 1,
+//                 'green': 2,
+//                 'blue': 3,
+//                 'yellow': 4
+//             }
+//         }
+
+//         var spritesheet = new createjs.SpriteSheet(data);
+//         var animation = new createjs.Sprite(spritesheet, 'yellow');
+//         animation.x = 100;
+//         animation.y = 100;
+
+//         stage.addChild(animation);
+//         stage.update();
+//         // createjs.Ticker.addEventListener("tick", update);
+//         // function update(event) {
+//         //     stage.update();
+//         // }
+//     }
+// });

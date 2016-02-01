@@ -14,19 +14,28 @@ define(["jquery", "./board"], function($, _board) {
         var Game = function(_ctx, _canvas)
         {
             //Drawing
-            this.ctx              = _ctx;
-            this.canvas           = _canvas;
+            this.ctx                = _ctx;
+            this.canvas             = _canvas;
             this.block_img          = null;
             this.cursor_img         = null;
             this.break_img          = null;
 
             //Game Data
-            this.player           = new _board();
+            this.player             = new _board();
+            this.score              = 0;
+            this.scorePerBlock      = 10;
+            this.scorePerLevel      = 50;
 
             //Game Flow
+            this.prevTick           = new Date().getTime();
             this.prevTime           = new Date().getTime();
             this.curTime            = new Date().getTime();
+            this.startTime          = new Date().getTime();
             this.isGameOver         = false;
+            this.level              = 1;
+            this.initialSpeed       = 1000;
+            this.speedPerLevel      = 10;
+            this.speedMultiplier    = 0;
 
             document.onkeydown = this.handle_input.bind(this);
         };
@@ -60,13 +69,23 @@ define(["jquery", "./board"], function($, _board) {
         {
             this.curTime = new Date().getTime();
 
-            if(this.curTime - this.prevTime > 250)
+            var elapsedTime = this.curTime - this.prevTime;
+
+            if(this.curTime - this.prevTick > (this.initialSpeed - this.speedMultiplier))
             {
                 this.player.Update();
-                this.prevTime = this.curTime;
+                this.prevTick = this.curTime;
             }
 
-            this.player.update_blocks();
+            var broken_blocks = this.player.update_blocks();
+
+            this.score += broken_blocks * this.scorePerBlock;
+
+            if(this.score >= this.level * this.scorePerLevel) {
+                this.level++;
+                this.speedMultiplier += this.speedPerLevel;
+                console.log(this.level);
+            }
 
             this.ctx.clearRect(0,0,this.player.GRID_W, this.player.GRID_H);
             this.player.Draw(this.ctx, this.block_img, this.cursor_img, this.break_img);
@@ -79,6 +98,8 @@ define(["jquery", "./board"], function($, _board) {
             {
                 //draw game over
             }
+
+            this.prevTime = this.curTime;
         };
 
 //--------------------------------------------------------------------------------------------------------------------\\

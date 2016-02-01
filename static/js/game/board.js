@@ -118,6 +118,7 @@ define(["./cursor", "./block", "./row-loader"], function(_cursor, _block, _loade
                 }
             }
         }
+
     };
 
     /*
@@ -174,7 +175,7 @@ define(["./cursor", "./block", "./row-loader"], function(_cursor, _block, _loade
     Board.prototype.Update = function () {
         var r, c, temp_block;
 
-        this.offset++;
+        this.offset += 2;
         if (this.offset == this.BLK_SIZE)
         {
             this.offset = 0;
@@ -206,6 +207,7 @@ define(["./cursor", "./block", "./row-loader"], function(_cursor, _block, _loade
     Board.prototype.update_blocks = function ()
     {
         var r, c;
+        var broken_blocks = 0;
         for (r = this.ROWS - 1; r >= 0; r--)
         {
             for (c = this.COLS - 1; c >= 0; c--)
@@ -257,6 +259,7 @@ define(["./cursor", "./block", "./row-loader"], function(_cursor, _block, _loade
                         case this.BlockState.BREAK:
                                 if(block.break_delay <= 0)
                                 {
+                                    broken_blocks++;
                                     var i = r - 1;
                                     this.grid_data[r][c].can_break = false;
                                     while (i >= 0 && this.grid_data[i][c] && this.grid_data[i][c] != -1) {
@@ -286,6 +289,7 @@ define(["./cursor", "./block", "./row-loader"], function(_cursor, _block, _loade
         }
         this.check_matches();
 
+        return broken_blocks;
     };
 
     //--------------------------------------------------------------------------------------------------------------------\\
